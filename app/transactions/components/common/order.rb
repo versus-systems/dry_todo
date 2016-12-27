@@ -11,11 +11,13 @@ module Components
     module Order
       def self.[] clause: nil, collection: :collection
         -> (input) {
-          if input[:order_by]
-            clause = { input[:order_by].to_s.underscore => (input[:order_direction] || :asc) }
+          ordering = if input[:order_by]
+            { input[:order_by].to_s.underscore => (input[:order_direction] || :asc) }
+          else
+            clause
           end
-          if input[collection].present? && clause.present?
-            input[collection] = input[collection].order(clause)
+          if input[collection].present? && ordering.present?
+            input[collection] = input[collection].order ordering
           end
           Right input
         }

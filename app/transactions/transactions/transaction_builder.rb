@@ -30,9 +30,10 @@ module Transactions
 
     # rubocop:disable all
     def step name, **args
-      component = common_component(name) ||
+      component = manual_component(args) ||
                   custom_component(name) ||
-                  manual_component(args)
+                  common_component(name)
+
       args = safe_args args
       fail("No such component: #{name}") unless component
       args = assumed_args(name) unless args.present?
